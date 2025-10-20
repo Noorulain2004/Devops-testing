@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Register = ({ setUser }) => {
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -18,11 +18,17 @@ const Register = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/users/register", formData);
+      // backend base URL
+      const res = await axios.post("http://localhost:5000/api/users/register", formData);
+
+      // store token locally
       localStorage.setItem("token", res.data.token);
-      console.log(res.data);
-      setUser(res.data);
-      navigate("/");
+
+      // set user in app state
+      setUser(res.data.user);
+
+      alert("🎉 Registration successful!");
+      navigate("/dashboard"); // go to next page
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }
@@ -38,19 +44,19 @@ const Register = ({ setUser }) => {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium mb-1">
-              Username
+              Name
             </label>
             <input
               className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-200 outline-none focus:border-blue-400"
-              type="username"
-              name="username"
-              value={formData.username}
+              type="text"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your username"
-              autoComplete="off"
+              placeholder="Enter your name"
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium mb-1">
               Email
@@ -62,10 +68,10 @@ const Register = ({ setUser }) => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              autoComplete="off"
               required
             />
           </div>
+
           <div className="mb-6">
             <label className="block text-gray-600 text-sm font-medium mb-1">
               Password
@@ -80,6 +86,7 @@ const Register = ({ setUser }) => {
               required
             />
           </div>
+
           <button className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 font-medium cursor-pointer">
             Register
           </button>

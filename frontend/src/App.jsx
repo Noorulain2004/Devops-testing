@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NotFound from "./components/NotFound";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -58,6 +59,10 @@ function App() {
           element={user ? <Navigate to="/" /> : <Register setUser={setUser} />}
         />
         <Route path="*" element={<NotFound />} />
+        <Route
+  path="/dashboard"
+  element={user ? <Dashboard user={user} /> : <Navigate to="/login" />}
+/>
       </Routes>
     </Router>
   );
